@@ -33,6 +33,7 @@ def init_props():
 
 def clear_props():
     del bpy.types.Scene.gpt4_chat_history
+    del bpy.types.Scene.gpt4_model
     del bpy.types.Scene.gpt4_chat_input
     del bpy.types.Scene.gpt4_button_pressed
 

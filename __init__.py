@@ -179,23 +179,23 @@ class GPT4_OT_Execute(bpy.types.Operator):
 
         # Clear the chat input field
         context.scene.gpt4_chat_input = ""
-
-    
+        
         if blender_code:
             message = context.scene.gpt4_chat_history.add()
             message.type = 'assistant'
             message.content = blender_code
 
             global_namespace = globals().copy()
-    
-        try:
-            exec(blender_code, global_namespace)
-        except Exception as e:
-            self.report({'ERROR'}, f"Error executing generated code: {e}")
+            try:
+                exec(blender_code, global_namespace)
+            except Exception as e:
+                self.report({'ERROR'}, f"Error executing generated code: {e}")
+                context.scene.gpt4_button_pressed = False
+                return {'CANCELLED'}
+        else:
+            self.report({'ERROR'}, "No code was generated.")
             context.scene.gpt4_button_pressed = False
             return {'CANCELLED'}
-
-        
 
         context.scene.gpt4_button_pressed = False
         return {'FINISHED'}
@@ -237,7 +237,7 @@ def unregister():
     bpy.utils.unregister_class(GPT4_PT_Panel)
     bpy.utils.unregister_class(GPT4_OT_ClearChat)
     bpy.utils.unregister_class(GPT4_OT_ShowCode)
-    bpy.utils.unegister_class(GPT4_OT_DeleteMessage)
+    bpy.utils.unregister_class(GPT4_OT_DeleteMessage)
 
     bpy.types.VIEW3D_MT_mesh_add.remove(menu_func)
     clear_props()
